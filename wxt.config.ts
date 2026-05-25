@@ -6,8 +6,9 @@ export default defineConfig({
   manifest: {
     permissions: ["storage"],
     action: {},
-    name: "__MSG_extName__",
-    description: "__MSG_extDescription__",
+    name: "PrintNum",
+    description:
+      "Дополнительные возможности для Ozon: печать ячеек, скрытие элементов, автоматизация процессов",
     default_locale: "en",
   },
 

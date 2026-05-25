@@ -1,10 +1,5 @@
-// Функция поиска с автоматическим ожиданием
-export async function searchSelector(selector, timeout = 5000) {
-  return waitLoadElement(selector, timeout);
-}
-
 // Эффективное ожидание элемента через MutationObserver
-export function waitLoadElement(selector, timeout = 5000) {
+export async function waitLoadElement(selector, timeout = 5000) {
   return new Promise((resolve, reject) => {
     // 1. Проверяем, может элемент уже есть на странице
     const element = document.querySelector(selector);
