@@ -1,38 +1,76 @@
 // entrypoints/example.content.ts
 
 export default defineContentScript({
-  matches: ["https://turbo-pvz.ozon.ru/*"],
+  matches: ["https://toscrape.com/*"],
   async main() {
-    let lastUrl = "";
     // форматирование текста
     function format_text(text) {
       const regex = /\d+/;
       return text.replace(regex, "").trim();
     }
-
-    async function hideElements() {
+    async function getListMenu() {
       const menuContent = 'div[class^="_wrapperMenuItems_"]';
       const menu = await waitLoadElement(menuContent);
+      console.log(menu);
+      if (menu) {
+        const menuTags = menu.querySelectorAll("a");
+        if (menuTags) {
+          return menuTags.map((e) => format_text(e.textContent));
+        }
+      }
 
-      let menuTags;
-      if (menu) menuTags = menu.querySelectorAll("a");
-
-      let menuTexts;
-      if (menuTags) {
-        menuTexts = menuTags.map((e) => format_text(e.textContent));
-      } 
+      return false;
     }
 
-    new MutationObserver(async () => {
-      const curURL = location.href;
-      if (lastUrl !== curURL) {
-        lastUrl = curURL;
-        await hideElements();
-      }
-    }).observe(document.body, {
-      childList: true,
-      subtree: true,
+    let menuTexts = (await getListMenu()) || [
+      "Выдача возвратов",
+      "Посылки",
+      "Ozon банк",
+    ];
+
+    // при первом запуске отправляет актуальный список
+    if (menuTexts) {
+      console.log(menuTexts);
+      // Отправляем сообщение напрямую в расширение
+      chrome.runtime.sendMessage({ listMenu: menuTexts }, (response) => {
+        console.log("Popup ответил:", response?.status);
+      });
+    }
+
+    chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+      console.log(message);
+      // if (message.listMenu.length > 0) {
+      //   console.log("Получено в popup:", message.listMenu);
+
+      //   sendResponse({ status: "Popup принял данные!" });
+      // }
+      return true;
     });
+    //  Находим текущую активную вкладку браузера
+    // chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    //   const activeTabId = tabs[0].id;
+
+    //   // Отправляем сообщение в content script этой вкладки
+    //   chrome.tabs.sendMessage(
+    //     activeTabId,
+    //     { action: "DATA_TO_CONTENT", payload: "Привет из popup!" },
+    //     (response) => {
+    //       // Обрабатываем ответ от content script (если он есть)
+    //       console.log("Ответ от content script:", response?.status);
+    //     },
+    //   );
+    // });
+
+    // new MutationObserver(async () => {
+    //   const curURL = location.href;
+    //   if (lastUrl !== curURL) {
+    //     lastUrl = curURL;
+    //     await hideElements();
+    //   }
+    // }).observe(document.body, {
+    //   childList: true,
+    //   subtree: true,
+    // });
 
     // const menuContent = 'div[class^="_wrapperMenuItems_"]';
     // const menuTags = await waitLoadElement(menuContent);
