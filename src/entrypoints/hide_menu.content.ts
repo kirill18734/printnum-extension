@@ -1,104 +1,62 @@
 // entrypoints/example.content.ts
 
 export default defineContentScript({
-  matches: ["https://toscrape.com/*"],
+  matches: ["https://turbo-pvz.ozon.ru/*"],
   async main() {
+    const container = 'div[class^="_wrapperMenuItems_"]';
     // форматирование текста
     function format_text(text) {
       const regex = /\d+/;
       return text.replace(regex, "").trim();
     }
-    async function getListMenu() {
-      const menuContent = 'div[class^="_wrapperMenuItems_"]';
-      const menu = await waitLoadElement(menuContent);
-      console.log(menu);
-      if (menu) {
-        const menuTags = menu.querySelectorAll("a");
-        if (menuTags) {
-          return menuTags.map((e) => format_text(e.textContent));
+
+    async function changeMenu() {
+      const storeHideMenu = (await getChromeStorage("hideMenu")) || [];
+      const storeMenu = (await getChromeStorage("menu")) || [];
+
+      await waitLoadElement(container).then(async (element) => {
+        const menuItems = [...element.querySelectorAll("a")];
+        const itemsValue = menuItems.map((e) => format_text(e.textContent));
+        // обновление старого списка из хранилища
+        if (JSON.stringify(itemsValue) !== JSON.stringify(storeMenu)) {
+          await setChromeStorage("menu", itemsValue);
         }
-      }
 
-      return false;
-    }
-
-    let menuTexts = (await getListMenu()) || [
-      "Выдача возвратов",
-      "Посылки",
-      "Ozon банк",
-    ];
-
-    // при первом запуске отправляет актуальный список
-    if (menuTexts) {
-      console.log(menuTexts);
-      // Отправляем сообщение напрямую в расширение
-      chrome.runtime.sendMessage({ listMenu: menuTexts }, (response) => {
-        console.log("Popup ответил:", response?.status);
+        //скрытие/показ элементов
+        menuItems.forEach((item) => {
+          const text = format_text(item.textContent);
+          const isHidden = storeHideMenu.includes(text);
+          item.style.display = isHidden ? "none" : "";
+        });
       });
     }
 
-    chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-      console.log(message);
-      // if (message.listMenu.length > 0) {
-      //   console.log("Получено в popup:", message.listMenu);
+    let lastURL = location.href;
+    // Сначала дожидаемся появления контейнера меню на странице
+    waitLoadElement(container).then((menuContainer) => {
+      const observer = new MutationObserver(async () => {
+        const curURL = location.href;
 
-      //   sendResponse({ status: "Popup принял данные!" });
-      // }
-      return true;
+        if (lastURL !== curURL) {
+          lastURL = curURL;
+          await changeMenu();
+        }
+      });
+
+      // Наблюдаем ТОЛЬКО за контейнером меню, а не за всем сайтом
+      observer.observe(menuContainer, {
+        childList: true, // следим за добавлением/удалением ссылок
+        subtree: true, // следим за изменениями внутри этих ссылок (например, счетчиков)
+      });
+
+      // Вызываем первый раз при загрузке, чтобы меню сразу настроилось
+      changeMenu();
     });
-    //  Находим текущую активную вкладку браузера
-    // chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    //   const activeTabId = tabs[0].id;
 
-    //   // Отправляем сообщение в content script этой вкладки
-    //   chrome.tabs.sendMessage(
-    //     activeTabId,
-    //     { action: "DATA_TO_CONTENT", payload: "Привет из popup!" },
-    //     (response) => {
-    //       // Обрабатываем ответ от content script (если он есть)
-    //       console.log("Ответ от content script:", response?.status);
-    //     },
-    //   );
-    // });
-
-    // new MutationObserver(async () => {
-    //   const curURL = location.href;
-    //   if (lastUrl !== curURL) {
-    //     lastUrl = curURL;
-    //     await hideElements();
-    //   }
-    // }).observe(document.body, {
-    //   childList: true,
-    //   subtree: true,
-    // });
-
-    // const menuContent = 'div[class^="_wrapperMenuItems_"]';
-    // const menuTags = await waitLoadElement(menuContent);
-    // let menuTexts;
-    // if (menuTags) {
-    //   menuTexts = menuTags
-    //     .querySelectorAll("a")
-    //     .map((e) => format_text(e.textContent));
-    // }
-    // await setChromeStorage("menuTexts", menuTexts);
-    // const res = await getChromeStorage("menuTexts");
-    // console.log(res);
-    // // if (menu) {
-    // //   const elements = [...menu.querySelectorAll("a")];
-    // //   const menuItems =
-    // //     elements.map((el, index) => ({ id: index, name: el.textContent })) ||
-    // //     [];
-    // //   const menuItemsStorage = (await getChromeStorage("menuItems")) || [];
-    // //   // создаем/обновляем актуальные данные
-    // //   if (menuItemsStorage.length !== menuItems.length) {
-    // //     await setChromeStorage("listMenu", menuItems);
-    // //   }
-    // //   await chrome.storage.StorageArea.onChanged.addListener((e) =>
-    // //     console.log(e),
-    // //   );
-    // // } else {
-    // //   await setChromeStorage("listMenu", []);
-    // //   await setChromeStorage("listHideMenu", []);
-    // // }
+    chrome.storage.onChanged.addListener(async (message) => {
+      if (message.hideMenu) {
+        await changeMenu();
+      }
+    });
   },
 });

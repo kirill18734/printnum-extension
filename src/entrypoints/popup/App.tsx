@@ -30,43 +30,11 @@ function App() {
   const listMenu = ["Выдача товаров", "Возвраты", "Посылки", "Поиск предметов"];
 
   return (
-    // <div
-    //   className={cn(
-    //     "m-10 flex items-center justify-between p-3 rounded-lg border transition-colors",
-    //     isVisible
-    //       ? "bg-emerald-50/50 border-emerald-200"
-    //       : "bg-red-50/50 border-red-200",
-    //   )}
-    // >
-    //   <div className="flex items-center gap-3">
-    //     {isVisible ? (
-    //       <Eye className="h-4 w-4 text-emerald-600" />
-    //     ) : (
-    //       <EyeOff className="h-4 w-4 text-red-500" />
-    //     )}
-    //     <Label
-    //       className={cn(
-    //         "font-medium",
-    //         isVisible
-    //           ? "text-emerald-900"
-    //           : "text-red-900 line-through opacity-70",
-    //       )}
-    //     >
-    //       {name}
-    //     </Label>
-    //   </div>
-
-    //   <Switch
-    //     checked={isVisible}
-    //     onCheckedChange={setIsVisible}
-    //     className="data-[state=checked]:bg-emerald-500 data-[state=unchecked]:bg-red-500"
-    //   />
-    // </div>
     <Accordion
       type="single"
       collapsible
       defaultValue="shipping"
-      className="w-96 m-10 p-2 rounded-lg border"
+      className="w-auto p-2 rounded-lg border"
     >
       <AccordionItem value="shipping">
         <AccordionTrigger>Настройка видимости</AccordionTrigger>

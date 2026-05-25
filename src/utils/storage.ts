@@ -7,8 +7,8 @@ export async function getKeysChromeStorage() {
   return await chrome.storage.local.getKeys();
 }
 
-export async function setChromeStorage(key, value) {
-  await chrome.storage.local.set({ key: value });
+export async function setChromeStorage(keyName, value) {
+  await chrome.storage.local.set({ [keyName]: value });
 }
 
 export async function clearChromeStorage() {
