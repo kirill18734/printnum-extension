@@ -6,10 +6,9 @@ export default defineConfig({
   manifest: {
     permissions: ["storage"],
     action: {},
-    name: "PrintNum",
+    name: "PrintNum - Печать Ячеек (Ozon)",
     description:
-      "Дополнительные возможности для Ozon: печать ячеек, скрытие элементов, автоматизация процессов",
-    default_locale: "en",
+      "Дополнительные возможности для Ozon: печать ячеек, скрытие элементов, автоматизация процессов с помощью qr-кодов",
   },
 
   srcDir: "src",
