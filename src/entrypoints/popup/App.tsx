@@ -1,17 +1,12 @@
 import { useEffect } from "react";
 import Hide from "./hide";
 import QrCommands from "./qrCommands";
+import Printing from "./printing";
 
 function App() {
   useEffect(() => {
-    const theme = "system";
     const body = document.documentElement;
-
-    const isDark =
-      theme === "dark" ||
-      (theme === "system" &&
-        window.matchMedia("(prefers-color-scheme: dark)").matches);
-
+    const isDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
     body.classList.toggle("dark", isDark);
   }, []);
 
