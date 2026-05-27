@@ -28,28 +28,28 @@ export function SettingRow({
       variant="ghost"
       onClick={onToggle}
       className={cn(
-        "flex w-full items-center justify-between p-3 h-auto rounded-lg border text-left font-normal transition-all",
+        "flex w-full items-center justify-start gap-3 p-2.5 h-auto rounded-lg border text-left font-normal transition-all",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
         isHidden
-          ? "bg-secondary/40 border-muted hover:bg-secondary/80 text-muted-foreground"
-          : "bg-background border-border hover:bg-muted/50 shadow-sm text-foreground",
+          ? "bg-muted/40 border-muted text-muted-foreground/60 hover:bg-muted/60"
+          : "bg-background border-border shadow-sm text-foreground hover:bg-muted/40 hover:border-border/80",
       )}
     >
-      <div className="flex items-center gap-3 pointer-events-none w-full">
+      <div className="flex items-center justify-center shrink-0">
         {isHidden ? (
-          <HiddenIcon className="h-4 w-4 text-muted-foreground/70 shrink-0" />
+          <HiddenIcon className="h-4 w-4 text-muted-foreground/50" />
         ) : (
-          <VisibleIcon className="h-4 w-4 text-emerald-600 dark:text-emerald-500 shrink-0" />
+          <VisibleIcon className="h-4 w-4 text-emerald-600 dark:text-emerald-500" />
         )}
-        <span
-          className={cn(
-            "text-sm font-medium truncate",
-            isHidden && "line-through opacity-60",
-          )}
-        >
-          {label}
-        </span>
       </div>
+      <span
+        className={cn(
+          "text-xs font-medium truncate select-none",
+          isHidden && "line-through opacity-60",
+        )}
+      >
+        {label}
+      </span>
     </Button>
   );
 }
@@ -62,7 +62,7 @@ interface SettingSectionProps {
   onItemToggle: (item: string) => void;
   VisibleIcon: LucideIcon;
   HiddenIcon: LucideIcon;
-  renderLabel?: (item: string) => string; // Добавили опциональную функцию форматирования текста
+  renderLabel?: (item: string) => string;
 }
 
 export function SettingSection({
@@ -76,14 +76,16 @@ export function SettingSection({
   renderLabel,
 }: SettingSectionProps) {
   return (
-    <AccordionItem value={value} className="border-b">
-      <AccordionTrigger className="p-4 text-sm font-semibold hover:no-underline hover:bg-muted/50 transition-colors">
+    // Меняем border-none на border-b для разделения вложенных групп
+    <AccordionItem value={value} className="border-none">
+      {/* Возвращаем нормальный отступ px-4 вместо pl-6 */}
+      <AccordionTrigger className="px-4 py-3 text-xs font-semibold text-muted-foreground hover:text-foreground hover:no-underline hover:bg-muted/20 transition-colors">
         {title}
       </AccordionTrigger>
-      <AccordionContent className="p-3 pt-0 flex flex-col gap-2">
+      {/* Паддинги внутри подстроены под вложенность */}
+      <AccordionContent className="px-4 pb-3 pt-0 flex flex-col gap-1.5">
         {items.map((element) => {
           const isHidden = hiddenItems.includes(element);
-          // Если передан renderLabel, используем его для красивого отображения названия
           const displayLabel = renderLabel ? renderLabel(element) : element;
 
           return (

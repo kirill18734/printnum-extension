@@ -23,7 +23,7 @@ export default function Notification() {
   return (
     <SettingSection
       value="notification-settings"
-      title="Уведомления"
+      title="Видимость уведомлений"
       items={menuOptions}
       hiddenItems={hiddenNotifications}
       onItemToggle={(item) => toggleHiddenItem(item, setHiddenNotifications)}
