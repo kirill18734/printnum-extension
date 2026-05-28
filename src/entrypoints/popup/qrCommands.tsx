@@ -2,7 +2,7 @@ import { useState } from "react";
 import { SettingSection } from "./SettingSection";
 import { Ban, QrCode } from "lucide-react";
 import { Accordion } from "@/components/ui/accordion";
-import { qrCommands } from "@/utils/config";
+import { qrCommands } from "@/utils/configCommands";
 
 export default function QrCommands() {
   const qrHandlers = qrCommands;

@@ -27,6 +27,7 @@ export function SettingRow({
       type="button"
       variant="ghost"
       onClick={onToggle}
+      title={isHidden ? "Отключено" : "Включено"}
       className={cn(
         "flex w-full items-center justify-start gap-3 p-2.5 h-auto rounded-lg border text-left font-normal transition-all",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",

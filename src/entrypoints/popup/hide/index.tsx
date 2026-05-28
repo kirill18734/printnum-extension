@@ -19,7 +19,6 @@ export default function Hide() {
       <Accordion
         type="single"
         collapsible
-        defaultValue="menu-settings"
         className="w-full divide-y divide-border"
       >
         <Menu />

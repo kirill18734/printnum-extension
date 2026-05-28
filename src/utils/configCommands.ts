@@ -84,7 +84,7 @@ export const qrCommands = [
   },
   {
     id: "82634791520368417952631",
-    name: "Возврат товара",
+    name: "Изменил решение о покупке/Товар не подошёл",
     repeat: false,
     actions: [TEXT.CHECK, TEXT.ONCHECK, TEXT.READY, TEXT.RETURN_REASON_1],
   },
