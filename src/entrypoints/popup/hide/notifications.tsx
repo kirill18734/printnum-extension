@@ -1,34 +1,29 @@
 import { Bell, BellOff } from "lucide-react"; // Заменили Eye и EyeOff на Bell и BellOff
-import { useState } from "react";
 import { SettingSection } from "../SettingSection";
+import { notifications } from "@/utils/configNotification";
 
 export default function Notification() {
-  const menuOptions = [
-    "Выдача товаров",
-    "Возвраты",
-    "Посылки",
-    "Поиск предметов",
-  ];
-  const [hiddenNotifications, setHiddenNotifications] = useState<string[]>([]);
-  // Универсальный хэндлер для работы со скрытыми элементами
-  const toggleHiddenItem = (
-    item: string,
-    setHiddenRows: React.Dispatch<React.SetStateAction<string[]>>,
-  ) => {
-    setHiddenRows((prev) =>
-      prev.includes(item) ? prev.filter((i) => i !== item) : [...prev, item],
-    );
-  };
+  const [notification, setNotification] = useStorageState(
+    "notification",
+    notifications.map((elem) => elem.id),
+  );
+  const [offNotification, setOffNotification] = useStorageState(
+    "offNotification",
+    [],
+  );
 
   return (
     <SettingSection
       value="notification-settings"
       title="Видимость уведомлений"
-      items={menuOptions}
-      hiddenItems={hiddenNotifications}
-      onItemToggle={(item) => toggleHiddenItem(item, setHiddenNotifications)}
+      items={notification}
+      hiddenItems={offNotification}
+      onItemToggle={setOffNotification}
       VisibleIcon={Bell}
       HiddenIcon={BellOff}
+      renderLabel={(id) =>
+        notifications.find((elem) => elem.id === id)?.name || id
+      }
     />
   );
 }

@@ -20,7 +20,6 @@ export async function waitLoadElement(selector, timeout = 5000) {
     // 3. Ограничиваем время ожидания
     const timer = setTimeout(() => {
       observer.disconnect();
-      // reject(false);
       reject(new Error(`Элемент ${selector} не найден за ${timeout}мс`));
     }, timeout);
   });

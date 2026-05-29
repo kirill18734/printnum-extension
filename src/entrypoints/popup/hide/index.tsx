@@ -3,6 +3,7 @@ import Returns from "./returns";
 import Notification from "./notifications";
 import { Accordion } from "@/components/ui/accordion";
 import { Eye } from "lucide-react";
+import Other from "./other";
 
 export default function Hide() {
   return (
@@ -24,6 +25,7 @@ export default function Hide() {
         <Menu />
         <Notification />
         <Returns />
+        <Other/>
       </Accordion>
     </div>
   );

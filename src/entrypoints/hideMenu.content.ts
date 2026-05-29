@@ -31,7 +31,7 @@ export default defineContentScript({
       });
     }
 
-    let lastURL = location.href;
+    let lastURL = "";
     // Сначала дожидаемся появления контейнера меню на странице
     waitLoadElement(container).then((menuContainer) => {
       const observer = new MutationObserver(async () => {
@@ -48,9 +48,6 @@ export default defineContentScript({
         childList: true, // следим за добавлением/удалением ссылок
         subtree: true, // следим за изменениями внутри этих ссылок (например, счетчиков)
       });
-
-      // Вызываем первый раз при загрузке, чтобы меню сразу настроилось
-      changeMenu();
     });
 
     chrome.storage.onChanged.addListener(async (message) => {

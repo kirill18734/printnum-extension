@@ -1,35 +1,18 @@
 import { Eye, EyeOff } from "lucide-react";
-import { useState } from "react";
 import { SettingSection } from "../SettingSection";
 
 export default function Menu() {
-  const menuOptions = [
-    "Выдача товаров",
-    "Возвраты",
-    "Посылки",
-    "Поиск предметов",
-  ];
-
+  const [menu, setMenu] = useStorageState("menu", []);
   // Храним только СКРЫТЫЕ элементы (массивы будут максимально короткими)
-  const [hiddenMenus, setHiddenMenus] = useState<string[]>(["Выдача товаров"]);
-
-  // Универсальный хэндлер для работы со скрытыми элементами
-  const toggleHiddenItem = (
-    item: string,
-    setHiddenRows: React.Dispatch<React.SetStateAction<string[]>>,
-  ) => {
-    setHiddenRows((prev) =>
-      prev.includes(item) ? prev.filter((i) => i !== item) : [...prev, item],
-    );
-  };
+  const [offMenu, setOffMenu] = useStorageState("offMenu", []);
 
   return (
     <SettingSection
       value="menu-settings"
       title="Видимость меню"
-      items={menuOptions}
-      hiddenItems={hiddenMenus}
-      onItemToggle={(item) => toggleHiddenItem(item, setHiddenMenus)}
+      items={menu}
+      hiddenItems={offMenu}
+      onItemToggle={setOffMenu}
       VisibleIcon={Eye}
       HiddenIcon={EyeOff}
     />
