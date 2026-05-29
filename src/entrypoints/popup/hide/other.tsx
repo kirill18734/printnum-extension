@@ -1,6 +1,6 @@
 import { Eye, EyeOff } from "lucide-react";
 import { SettingSection } from "../SettingSection";
-import { others } from "@/utils/configHideOther";
+import { others } from "@/utils/configOther";
 
 export default function Other() {
   const [other, setOther] = useStorageState("other", others);
@@ -9,7 +9,7 @@ export default function Other() {
 
   return (
     <SettingSection
-      value="menu-settings"
+      value="other-settings"
       title="Другое"
       items={other}
       hiddenItems={offOther}

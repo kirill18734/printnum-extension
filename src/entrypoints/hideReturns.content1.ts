@@ -5,10 +5,35 @@ export default defineContentScript({
       // Селектор для поиска с ожиданием:
       const container =
         'div[class^="_outboundLayout_"] div[class^="_block_"]:nth-of-type(2)';
+      const storeOffReturns = (await getChromeStorage("offReturns")) || [];
+      const storeReturns = (await getChromeStorage("returns")) || [];
 
       await waitLoadElement(container).then(async (element) => {
         if (element.textContent.includes("Добавьте содержимое в перевозку")) {
-          console.log(element);
+          const returnsItems = [
+            ...element.querySelectorAll('div[class*="_itemsElement_"]'),
+          ];
+          const itemsValue = [
+            ...new Set(
+              returnsItems.map(
+                (e) => e.querySelector('div[class^="_titleWrap_"]').textContent,
+              ),
+            ),
+          ];
+
+          // обновление старого списка из хранилища
+          if (JSON.stringify(itemsValue) !== JSON.stringify(storeReturns)) {
+            await setChromeStorage("returns", itemsValue);
+          }
+
+          //скрытие/показ элементов
+          returnsItems.forEach((item) => {
+            const text = item.querySelector(
+              'div[class^="_titleWrap_"]',
+            ).textContent;
+            const isHidden = storeOffReturns.includes(text);
+            item.style.display = isHidden ? "none" : "";
+          });
         }
       });
     }

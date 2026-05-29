@@ -4,7 +4,6 @@ export default defineContentScript({
   matches: ["https://turbo-pvz.ozon.ru/*"],
   async main() {
     const container = "#ozi-notifications-container";
-    let lastURL = "";
 
     async function changeNotification() {
       const offNotification = (await getChromeStorage("offNotification")) || [];
@@ -26,6 +25,7 @@ export default defineContentScript({
       });
     }
 
+    let lastURL = "";
     // Отслеживание изменений DOM для SPA-навигации Ozon
     new MutationObserver(async () => {
       const curURL = location.href;
