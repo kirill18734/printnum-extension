@@ -9,7 +9,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import StatusPrinting from "./statusPrinting";
-import Automation from "./automation";
+import Autoscript from "./autoscript";
 
 function App() {
   useEffect(() => {
@@ -35,7 +35,7 @@ function App() {
           <AccordionContent className="p-3 pt-0 flex flex-col items-center gap-2">
             <div className="flex flex-col items-center p-2 w-full gap-2">
               <QrCommands />
-              <Automation />
+              <Autoscript />
               <Hide />
             </div>
           </AccordionContent>

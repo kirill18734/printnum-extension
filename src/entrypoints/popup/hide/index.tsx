@@ -23,9 +23,9 @@ export default function Hide() {
         className="w-full divide-y divide-border"
       >
         <Menu />
-        {/* <Notification />
+        <Notification />
         <Returns />
-        <Other /> */}
+        <Other />
       </Accordion>
     </div>
   );

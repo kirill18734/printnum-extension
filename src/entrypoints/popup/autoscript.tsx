@@ -1,16 +1,16 @@
 import { Accordion } from "@/components/ui/accordion";
-import { automations } from "@/utils/configAutomation";
+import { autoscripts } from "@/utils/configAutoscripts";
 import { SettingSection } from "./SettingSection";
 import { Play, Pause } from "lucide-react";
 
-export default function Automation() {
+export default function Autoscript() {
   const [autoscript, setAutoscript] = useStorageState(
-    "autoscript",
-    automations,
+    "autoscripts",
+    autoscripts,
   );
   // Храним только СКРЫТЫЕ элементы (массивы будут максимально короткими)
   const [offAutoscript, setOffAutoscript] = useStorageState(
-    "offAutoscript",
+    "offAutoscripts",
     [],
   );
 
